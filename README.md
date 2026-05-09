@@ -145,7 +145,11 @@ https://www.kaggle.com/datasets/johnsmith88/heart-disease-dataset
 ## Author
 
 Md Abrar Faiyaj
+
 Graduate Biotechnology Student | BRAC University,Dhaka,Bangladesh
+
 Junior Research Collaborator   | ABCD Laboratory, Chittagong, Bangladesh
+
 GitHub: https://github.com/mdabrarfaiyaj
-LinkedIn: https://www.linkedin.com/in/md-abrar-faiyaj-559246381/
+
+LinkedIn: https://www.linkedin.com/in/md-abrar-faiyaj-559246381
