@@ -60,6 +60,15 @@ This context matters when interpreting certain findings.
 
 ---
 
+## Dashboard
+
+![Patient Data Analysis Dashboard](outputs/dashboard.png)
+
+The dashboard above contains six visualizations produced from the dataset.
+Each chart addresses a specific analytical question and is discussed in
+detail under Key Findings below.
+
+
 ## Key Findings
 
 **Disease prevalence**
