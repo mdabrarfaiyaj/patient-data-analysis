@@ -1,136 +1,94 @@
-# Patient Data Analysis — Heart Disease Dataset
+# Patient Data Analysis: Heart Disease Dataset
 
-## Overview
+Exploratory analysis of the Kaggle version of the UCI heart disease dataset with Python, SQL (SQLite) and a six-panel dashboard. The most important result turned out to be about **data quality**: the file contains many duplicate rows, and its disease labels appear to be reversed.
 
-This project is an exploratory data analysis of the Heart Disease UCI dataset,
-a clinical dataset containing records from 1,025 patients who were assessed for
-cardiovascular disease. The analysis was conducted using Python, SQL, and a
-set of visualization libraries to identify patterns and risk factors associated
-with heart disease presence.
-
-The goal was not simply to plot data, but to ask meaningful questions and let
-the data answer them honestly — including where the answers are surprising.
+📝 **Blog post:** [When My Data Disagreed With the Textbook](https://mdabrarfaiyaj.github.io/posts/When-My-Data-Disagreed-With-the-Textbook/)
 
 ---
 
-## Tools and Technologies
+## Tools
 
-- Python — Pandas, NumPy, Matplotlib, Seaborn
-- SQL — SQLite via Python's sqlite3 library
-- Jupyter Notebook
-- Git and GitHub for version control
+Python (pandas, NumPy, Matplotlib, Seaborn) · SQL (SQLite via `sqlite3`) · Jupyter Notebook · Git/GitHub
 
----
-
-## Project Structure
+## Project structure
 
 ```
 patient-data-analysis/
-├── data/               Raw dataset (heart.csv) and SQLite database
-├── notebooks/          Jupyter Notebook containing the full analysis
-├── outputs/            All generated charts and the dashboard image
-├── sql/                Standalone SQL queries used for data extraction
-└── README.md           This file
+├── data/        heart.csv (Kaggle) and the SQLite database
+├── notebooks/   patient_analysis.ipynb (full analysis)
+├── outputs/     dashboard.png
+├── sql/         queries.sql
+└── README.md
 ```
 
 ---
 
 ## Dataset
 
-Source: Heart Disease UCI Dataset via Kaggle
-Records: 1,025 patients
-Features: 14 variables including age, sex, cholesterol, resting blood pressure,
-maximum heart rate, chest pain type, and a binary target variable indicating
-whether heart disease was diagnosed.
-
-The dataset originates from a clinical setting, meaning all patients in the
-sample were already presenting with cardiovascular symptoms when assessed.
-This context matters when interpreting certain findings.
+- **Source:** [Heart Disease Dataset on Kaggle](https://www.kaggle.com/datasets/johnsmith88/heart-disease-dataset), derived from the UCI heart disease data (Cleveland study; Detrano et al., 1989).
+- **Rows:** 1,025, but only **302 are unique**. Each patient appears about three times. The notebook removes duplicates before any analysis, so **all results below use 302 patients**.
+- **Variables:** 14, including age, sex, chest-pain type, resting blood pressure, cholesterol, maximum heart rate (`thalach`), ST depression (`oldpeak`), number of major vessels (`ca`) and a 0/1 `target`.
 
 ---
 
-## Questions: This Analysis Tries to Answer
+## Questions
 
-1. What proportion of this patient population has heart disease?
-2. Does age differ meaningfully between patients with and without disease?
-3. Is there a visible gender pattern in disease prevalence?
-4. How strongly does cholesterol level separate the two groups?
-5. What does maximum heart rate reveal about heart health?
-6. Which variables are most correlated with each other in this dataset?
-
----
+1. What share of patients is labelled as having heart disease?
+2. How do age, sex, cholesterol and maximum heart rate differ between the groups?
+3. Which variables are correlated?
 
 ## Dashboard
 
 ![Patient Data Analysis Dashboard](outputs/dashboard.png)
 
-The dashboard above contains six visualizations produced from the dataset.
-Each chart addresses a specific analytical question and is discussed in
-detail under Key Findings below.
-
-
-## Key Findings
-
-**Disease prevalence**
-54.3 percent of patients in this dataset were diagnosed with heart disease,
-and 45.7 percent were not. The near-even split makes this a reasonably
-balanced dataset for analysis, reducing the risk of skewed conclusions.
-
-**Age and disease**
-Patients diagnosed with heart disease tend to be older on average, clustering
-around the 55 to 60 age range. Patients without disease are more evenly
-distributed across ages, with a peak around 50 to 55. This confirms age as a
-genuine risk factor and aligns with established cardiovascular research.
-
-**Gender pattern**
-Male patients outnumber female patients in this sample significantly. Among
-female patients, the proportion with heart disease is notably high. However,
-this should not be interpreted as women being more susceptible in general.
-Because this is a clinical dataset — collected from patients already showing
-symptoms — the female group in this sample was already a high-risk population
-by selection. This is a case where understanding the data collection context
-prevents a misleading conclusion.
-
-**Cholesterol**
-One of the more counterintuitive findings is that cholesterol levels show
-very weak separation between the disease and no-disease groups. The median
-cholesterol values are nearly identical across both groups, and the
-distributions overlap heavily. This suggests that cholesterol alone, without
-other clinical context, is not a reliable standalone predictor of heart
-disease in this dataset.
-
-**Maximum heart rate**
-This variable shows the clearest visual separation between the two groups.
-Across all ages, patients with heart disease consistently achieve a lower
-maximum heart rate during exercise compared to patients without disease.
-A healthy heart responds to physical stress by pumping significantly faster.
-When that capacity is reduced, it is often a sign of underlying cardiovascular
-damage. This finding is medically well-supported and stands out as the
-strongest signal in this dataset.
-
-**Correlation structure**
-The correlation heatmap reveals several meaningful relationships. Maximum
-heart rate and ST depression (Oldpeak) are negatively correlated at -0.58,
-confirming that patients with higher exercise heart rates tend to show less
-cardiac stress. Age and the number of blocked major vessels carry a positive
-correlation of 0.30, which is consistent with the medical understanding that
-arterial blockage accumulates over time. Cholesterol shows near-zero
-correlation with most other variables, which is consistent with its weak
-predictive performance observed in the boxplot.
+The dashboard uses the labels exactly as provided in the Kaggle file (`target = 1` shown as "Disease"). Please read the section on label direction below before interpreting it.
 
 ---
 
-## Honest Limitations
+## Key findings
 
-This dataset is relatively small at 1,025 records and comes from a specific
-clinical population. The findings describe patterns within this sample and
-should not be generalized as universal medical conclusions. A proper clinical
-study would require larger, more diverse, and carefully controlled data
-collection. The purpose of this project is analytical and educational.
+### Group differences (302 unique patients, labels as provided)
+
+| | `target = 1` ("Disease") | `target = 0` ("No disease") |
+|---|---|---|
+| Patients | 164 (54.3%) | 138 (45.7%) |
+| Mean age | 52.6 years | 56.6 years |
+| Mean maximum heart rate | 158 bpm | 139 bpm |
+| Mean ST depression | 0.6 | 1.6 |
+| Mean number of major vessels | 0.3 | 1.2 |
+| Women in group | 72 | 24 |
+
+### The labels appear to be reversed
+
+Taken at face value, the "Disease" group is younger, reaches higher heart rates, has less ST depression, fewer affected vessels, and contains most of the women. Every one of these points runs **opposite** to established cardiology and to the original Cleveland study.
+
+The original Cleveland data has **164 patients without disease and 139 with disease**. In this file, the group labelled `target = 1` has exactly **164** patients. The share of women in the `target = 0` group (24 of 96, 25%) also matches the share of women *with* disease in the original study.
+
+The most likely explanation is that **0 and 1 were swapped** when this version of the dataset was created, which many Kaggle users have also reported. With the labels flipped, the results agree with medicine: patients with disease are older, reach lower maximum heart rates, show more ST depression and more affected vessels, and are more often men.
+
+> An earlier version of this README interpreted the results using textbook expectations without noticing that the numbers showed the opposite. That has been corrected here.
+
+### Findings that do not depend on label direction
+
+- **Cholesterol separates the groups poorly.** Median cholesterol is similar in both groups and the distributions overlap heavily; 126 of 302 patients have cholesterol above 250 mg/dL.
+- **Correlations** (302 unique patients):
+  - Maximum heart rate vs. age: **−0.40** (heart rate capacity falls with age)
+  - Maximum heart rate vs. ST depression: **−0.34**
+  - ST depression vs. ST slope: **−0.58**
+  - Age vs. number of major vessels: **0.30**
+  - Cholesterol: weak correlation with all other variables (|r| ≤ 0.21)
 
 ---
 
-## How to Run
+## Limitations
+
+- 302 unique patients from a hospital study in the 1980s; all were already being tested for heart disease, so this is not a general-population sample.
+- The label reversal is strongly supported by the evidence above but cannot be proven from this file alone. The original UCI data should be used for any real modelling.
+- This is an educational exploratory analysis, not a clinical study.
+
+---
+
+## How to run
 
 ```bash
 git clone https://github.com/mdabrarfaiyaj/patient-data-analysis
@@ -139,26 +97,15 @@ pip install -r requirements.txt
 jupyter notebook
 ```
 
-Open the notebook inside the notebooks folder and run all cells from top
-to bottom.
+Open `notebooks/patient_analysis.ipynb` and run all cells from top to bottom.
 
 ---
 
-## Dataset Source
+## References
 
-Heart Disease UCI Dataset
-https://www.kaggle.com/datasets/johnsmith88/heart-disease-dataset
+1. Detrano R, Janosi A, Steinbrunn W, et al. (1989). International application of a new probability algorithm for the diagnosis of coronary artery disease. *American Journal of Cardiology* 64(5): 304–310.
+2. Janosi A, Steinbrunn W, Pfisterer M, Detrano R (1988). Heart Disease [Dataset]. UCI Machine Learning Repository.
 
 ---
 
-## Author
-
-Md Abrar Faiyaj
-
-Graduate Biotechnology Student | BRAC University,Dhaka,Bangladesh
-
-Junior Research Collaborator   | ABCD Laboratory, Chittagong, Bangladesh
-
-GitHub: https://github.com/mdabrarfaiyaj
-
-LinkedIn: https://www.linkedin.com/in/md-abrar-faiyaj-559246381
+**Author:** Md. Abrar Faiyaj, M.Sc. Biotechnology, BRAC University · [Website](https://mdabrarfaiyaj.github.io/) · [GitHub](https://github.com/mdabrarfaiyaj) · [LinkedIn](https://www.linkedin.com/in/md-abrar-faiyaj-559246381)
